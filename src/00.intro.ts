@@ -1,22 +1,27 @@
-import {Observable, of} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import { Observable, of } from "rxjs";
+import { range, pipe } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 /*
     DO NOT TOUCH CONST NAMES (Otherwise, tests won't work)
  */
 
 // Just an observable which should send "Hello World"
-export const helloWorldObservable = of('Hello');
+export const helloWorldObservable = of("Hello World");
 
 // This one must trigger numbers from 0 to 10
 // Pro tip: You can also use `range` from RxJS
-export const zeroToTenObservable = of([0]);
+export const zeroToTenObservable = range(0, 11);
 
 // Use map operator to pick the first letter au each word
-export const firstLetterObservable = of('Wild', 'Code', 'School').pipe();
+export const firstLetterObservable = of("Wild", "Code", "School").pipe(
+  map((word) => word.charAt(0))
+);
 
 // Use filter operator to allow only positive numbers
-export const positiveNumbersObservable = of(-23, 543, 7, 6, 3, -234, 43).pipe()
+export const positiveNumbersObservable = of(-23, 543, 7, 6, 3, -234, 43).pipe(
+  filter((number) => number > 0)
+);
 
 // Write a function that produce the first 15th fibonnaci numbers
 // In mathematics, the Fibonacci numbers, commonly denoted Fn form a sequence,
@@ -30,6 +35,16 @@ export const positiveNumbersObservable = of(-23, 543, 7, 6, 3, -234, 43).pipe()
 // ect ...
 //
 // NOTE: Do not use `scan` operator
-export const fibonacciObservable = new Observable(function (observer) {
+export const fibonacciObservable = new Observable<number>(function (observer) {
+  let a = 0;
+  let b = 1;
 
+  for (let i = 0; i < 15; i++) {
+    observer.next(a);
+    const temp = a + b;
+    a = b;
+    b = temp;
+  }
+
+  observer.complete();
 });
